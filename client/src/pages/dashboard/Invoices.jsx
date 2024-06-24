@@ -84,7 +84,7 @@ const Invoices = () => {
       selector: (row) => row.email,
       cell: (row) => <div className="">{row.email}</div>,
       sortable: true,
-      width: "200px",
+      width: "180px",
     },
 
     {
@@ -92,7 +92,7 @@ const Invoices = () => {
       selector: (row) => row.createdAt,
       cell: (row) => <div className="">{format(row.createdAt)}</div>,
       sortable: true,
-      width: "140px",
+      width: "130px",
     },
 
     {
@@ -101,7 +101,6 @@ const Invoices = () => {
       cell: (row) => <div className="">{row?.amount}</div>,
       sortable: true,
       width: "100px",
-      
     },
     {
       name: "Actions",
@@ -113,8 +112,25 @@ const Invoices = () => {
               setId(row._id);
               setValue(row?.isActive ? false : true);
             }}
-            className="px-1 py-1 w-16 bg-red-500 text-white rounded-lg"
+            className="px-1 py-1 flex gap-1 items-center w-16 bg-red-500 text-white rounded-lg"
           >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z"
+              />
+            </svg>
             Pdf
           </button>
           <button
@@ -123,15 +139,46 @@ const Invoices = () => {
               setId(row._id);
               setValue(row?.isActive ? false : true);
             }}
-            className="px-1 py-1 w-32 bg-emerald-500 text-white rounded-lg"
+            className="px-1 flex items-center gap-1 py-1 w-32 bg-emerald-500 text-white rounded-lg"
           >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z"
+                clip-rule="evenodd"
+              />
+            </svg>
             Spreed Sheet
           </button>
           <a
             href={`/dashboard/${user?.role}/invoices/manage?id=${row?._id}`}
-            className="px-1 py-1 w-14 bg-blue-500 text-white rounded-lg"
+            className="px-1 flex items-center gap-1 py-1 w-20 bg-yellow-400 text-white rounded-lg"
           >
-            Detail
+            more
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+                d="M6 12h.01m6 0h.01m5.99 0h.01"
+              />
+            </svg>
           </a>
         </div>
       ),
