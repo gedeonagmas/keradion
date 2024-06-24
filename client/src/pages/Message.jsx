@@ -5,7 +5,7 @@ import {
   useCreateMutation,
   useLazyReadChatQuery,
   useLazyReadQuery,
-  useReadQuery
+  useReadQuery,
 } from "../features/api/apiSlice";
 import Response from "../components/Response";
 import LoadingButton from "../components/loading/LoadingButton";
@@ -49,60 +49,18 @@ const Message = () => {
   const [messageType, setMessageType] = useState("text");
   const [description, setDescription] = useState("");
   const refer = useRef(null);
-  const [cases, setCases] = useState([
-    {
-      name: "Civil",
-      description: "civil description",
-      category: [
-        {
-          name: "Family",
-          description: "family description",
-          category: [
-            { name: "Maintenance", description: "maintenance description" },
-            { name: "Adoption", description: "adoption description" },
-            { name: "Divorce", description: "divorce description" }
-          ]
-        },
-        {
-          name: "Contract",
-          description: "contract description",
-          category: [
-            {
-              name: "Contract of special movables",
-              description: "Contract of special movables"
-            },
-            {
-              name: "Sale or lease of buildings",
-              description: "Sale or lease of buildings description"
-            }
-          ]
-        }
-      ]
-    }
-  ]);
 
-  const [
-    trigger,
-    { data: messageData, isLoading, isError }
-  ] = useLazyReadChatQuery({ refetchOnFocus: false });
+  const [trigger, { data: messageData, isLoading, isError }] =
+    useLazyReadChatQuery({ refetchOnFocus: false });
 
   useEffect(() => {
     if (receiver && sender) {
       trigger({
         url: `/chat/${sender}.${receiver}?populatingType=chats&populatingValue=sender,receiver`,
-        tag: ["chats"]
+        tag: ["chats"],
       });
     }
   }, [receiver, sender]);
-
-  // const {
-  //   data: userData,
-  //   isLoading: userIsFetching,
-  //   isError: userIsError,
-  // } = useReadQuery({
-  //   url: `/user/users`,
-  //   tag: ["users"],
-  // });
 
   // const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -112,7 +70,7 @@ const Message = () => {
 
   const [
     userDataTrigger,
-    { data: userDatas, isFetching: userIsFetching, isError: userIsError }
+    { data: userDatas, isFetching: userIsFetching, isError: userIsError },
   ] = useLazyReadQuery();
 
   // useEffect(() => {
@@ -123,75 +81,32 @@ const Message = () => {
     const roles = role?.length > 0 ? `&role=${role}` : "";
     userDataTrigger({
       url: `/user/users?limit=${limit}${roles}&searchField=email&searchValue=${search}&populatingValue=user`,
-      tag: ["users"]
+      tag: ["users"],
     });
-  }, [limit, search, role]);
+  }, [limit, search]);
 
   console.log(limit, search, role, "user list fetching");
   const [userData, setUserData] = useState([]);
   useEffect(() => {
     const aa = [];
-    userDatas?.data?.map(e => {
+    userDatas?.data?.map((e) => {
       onlineUsers?.includes(e?.email) ? aa.unshift(e) : aa.push(e);
     });
     setUserData(aa);
   }, [userDatas]);
 
-  // console.log(userData, "user data value");
-  // const compare=()
-
-  // useEffect(() => {
-  //   const hash = location.hash.split("#").splice(1, 2);
-  //   // console.log(hash, "locations now");
-  //   if (location?.hash) {
-  //     setCurrentUser({ _id: location._id, email: location.email });
-  //   }
-  // }, []);
-  const focusHandler = id => {
-    [
-      "all-sidebar",
-      "lawyer-sidebar",
-      "private-sidebar",
-      "business-sidebar"
-    ].map(e => {
-      const ids = document.getElementById(e);
-      ids?.classList?.remove(
-        "border-b-blue-700",
-        // "border",
-        "text-blue-700"
-        // "font-bold"
-      );
-      if (id === e) {
-        ids?.classList?.add(
-          "border-b-blue-700",
-          // "border",
-          "text-blue-700"
-          // "font-bold"
-        );
-      }
-    });
-  };
-
   useEffect(() => {
-    setSocket(io("https://jms-main.onrender.com"));
+    setSocket(io("http://localhost:5001"));
   }, []);
 
-  //   useEffect(() => {
-  //     socket?.emit("connect-user", currentUser?.email);
-  //     socket?.on("aaa", (val) => {
-  //       setOnlineUsers(val);
-  //     });
-  //   }, [socket, currentUser]);
   useEffect(() => {
     socket?.emit("connect-user", currentUser?.email);
-    socket?.on("aaa", val => {
+    socket?.on("aaa", (val) => {
       setOnlineUsers(val);
     });
   }, [socket]);
 
-  // console.log(files, "only files");
   const sendHandler = () => {
-    // console.log(message, "message", messageType, files, "files");
     if (sender && receiver) {
       const formData = new FormData();
       formData.append("sender", sender);
@@ -202,27 +117,12 @@ const Message = () => {
       formData.append("url", "/chat");
       formData.append("tag", ["chats"]);
       files?.length > 0
-        ? [...files].forEach(file => {
+        ? [...files].forEach((file) => {
             formData.append("chatFile", file);
           })
         : formData.append("chatFile", files);
       sendMessageData(formData);
     }
-
-    // sender &&
-    //   receiver &&
-    //   sendMessageData({
-    //     chatId,
-    //     sender: sender,
-    //     receiver: receiver,
-    //     message: {
-    //       content: message,
-    //     },
-    //     messageType: type,
-    //     chatType: "private",
-    //     url: `/chat`,
-    //     tag: ["chats"],
-    //   });
   };
 
   useEffect(() => {
@@ -230,12 +130,12 @@ const Message = () => {
       setChatId(messageData?.data[0]?.chatId);
       setTexts(messageData?.data);
       socket?.emit("aa", messageData?.data, messageData?.data[0]?.chatId);
-      socket?.on("bb", text => {
+      socket?.on("bb", (text) => {
         setTexts(text);
       });
     }
   }, [messageData]);
-  console.log(messageData, "message data");
+
   useEffect(() => {
     refer.current?.scrollIntoView();
   }, [texts]);
@@ -244,20 +144,7 @@ const Message = () => {
     refer.current?.scrollIntoView();
   }, [typing]);
 
-  const closeLists = () => {
-    const i = document.getElementById("user_lists");
-    const ii = document.getElementById("user_list_container");
-    ii.classList?.remove("md:flex-[25%]");
-    i?.classList?.value?.includes("hidden")
-      ? (i.classList?.remove("hidden"),
-        i.classList?.add("flex"),
-        ii.classList?.add("md:flex-[25%]"))
-      : (i.classList?.remove("flex"),
-        i.classList?.add("hidden"),
-        ii.classList?.remove("md:flex-[25%]"));
-  };
-
-  const popup = id => {
+  const popup = (id) => {
     const i = document.getElementById(id);
     i?.classList?.value?.includes("hidden")
       ? (i.classList?.remove("hidden"), i.classList?.add("flex"))
@@ -265,103 +152,33 @@ const Message = () => {
   };
 
   // typing handler
-  const typingHandler = e => {
+  const typingHandler = (e) => {
     if (e.target.value.length > 0) {
       socket?.emit("typing t", true, chatId);
-      socket?.on("typing true", bool => {
+      socket?.on("typing true", (bool) => {
         setTyping(bool);
       });
     } else {
       socket?.emit("typing f", false, chatId);
-      socket?.on("typing false", bool => {
+      socket?.on("typing false", (bool) => {
         setTyping(bool);
       });
     }
   };
 
   useEffect(() => {
-    console.log(message);
     if (message.length > 0) {
       socket?.emit("typing t", true, chatId);
-      socket?.on("typing true", bool => {
+      socket?.on("typing true", (bool) => {
         setTyping(bool);
       });
     } else {
       socket?.emit("typing f", false, chatId);
-      socket?.on("typing false", bool => {
+      socket?.on("typing false", (bool) => {
         setTyping(bool);
       });
     }
   }, [message]);
-
-  //##########################################################################
-  const [displayVideo, setDisplayVideo] = useState(false);
-  const [peerId, setPeerId] = useState("");
-  const [remotePeerIdValue, setRemotePeerIdValue] = useState("");
-  const remoteVideoRef = useRef(null);
-  const currentUserVideoRef = useRef(null);
-  const peerInstance = useRef(null);
-  const ids = [];
-  const [calling, setCalling] = useState(false);
-  const [callIndicator, setCallIndicator] = useState(false);
-  const [caller, setCaller] = useState("");
-  const [callFlag, setCallFlag] = useState(false);
-  const [callRejected, setCallRejected] = useState(false);
-  const [rejectedMessage, setRejectedMessage] = useState("");
-  const [receiverUser, setReceiverUser] = useState("");
-  // const [showUserList, setShowUserList] = useState(false);
-
-  useEffect(() => {
-    const peer = new Peer();
-
-    peer.on("open", id => {
-      ids.push(id);
-      setPeerId(id);
-    });
-
-    peer.on("call", call => {
-      var getUserMedia =
-        navigator.getUserMedia ||
-        navigator.webkitGetUserMedia ||
-        navigator.mozGetUserMedia;
-
-      getUserMedia({ video: true, audio: false }, mediaStream => {
-        currentUserVideoRef.current.srcObject = mediaStream;
-        currentUserVideoRef.current.play();
-        call.answer(mediaStream);
-        call.on("stream", function(remoteStream) {
-          remoteVideoRef.current.srcObject = remoteStream;
-          remoteVideoRef.current.play();
-        });
-      });
-    });
-
-    peerInstance.current = peer;
-  }, []);
-
-  const call = remotePeerId => {
-    var getUserMedia =
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia;
-
-    getUserMedia({ video: true, audio: false }, mediaStream => {
-      currentUserVideoRef.current.srcObject = mediaStream;
-      currentUserVideoRef.current.play();
-
-      const call = peerInstance.current.call(remotePeerId, mediaStream);
-
-      call.on("stream", remoteStream => {
-        remoteVideoRef.current.srcObject = remoteStream;
-        remoteVideoRef.current.play();
-      });
-    });
-  };
-
-  const callAcceptHandler = () => {
-    socket?.emit("call-accepted", chatId, true, peerId);
-    // socket?.emit("call-accepted-peerIdSend", chatId, peerId);
-  };
 
   useEffect(() => {
     if (sendMessageResponse?.status === "fulfilled" && messageType === "file") {
@@ -372,169 +189,71 @@ const Message = () => {
     }
   }, [sendMessageResponse]);
 
-  socket?.on("call-accepted-response", (bool, peerId) => {
-    setDisplayVideo(bool);
-    // call(peerId);
-    setCallFlag(false);
-  });
-
-  // socket?.on("call-accepted-peerId", (pid) => {
-  //   console.log(pid, "peer id incomming");
-  //   setRemotePeerIdValue(pid);
-  //   call(remotePeerIdValue);
-  // });
-
-  const callRequest = () => {
-    setCallFlag(true);
-    setRejectedMessage("Calling...");
-    socket?.emit("call-request-send", chatId, currentUser._id);
-  };
-
-  socket?.on("call-request-received", (bool, name) => {
-    setCalling(bool);
-    setCaller(name);
-  });
-
-  const callRejectedHandler = () => {
-    socket?.emit("call-rejected", chatId, false, "Gedi is not answering");
-  };
-
-  socket?.on("call-rejected-response", (bool, msg) => {
-    setRejectedMessage(msg);
-    setTimeout(() => {
-      setCallFlag(bool);
-      setRejectedMessage("");
-    }, 4000);
-  });
-
   useEffect(() => {
     if (sendMessageResponse?.status === "fulfilled") {
       setMessage("");
     }
   }, [sendMessageResponse]);
 
-  console.log(receiverUser, "dd", currentUser, "peer id");
   return (
     <div className="flex text-xs overflow-hidden relative">
       <Response response={sendMessageResponse} setPending={setPending} />
 
-      {/* video */}
-      {displayVideo ? (
-        <div className="absolute z-20 pl-[220px] top-0 left-0 bg-white bg-dark flex gap-5 items-center p-5 w-full h-[100vh]">
-          <Video
-            setRemotePeerIdValue={setRemotePeerIdValue}
-            remotePeerIdValue={remotePeerIdValue}
-            remoteVideoRef={remoteVideoRef}
-            currentUserVideoRef={currentUserVideoRef}
-            peerId={peerId}
-            call={call}
-            setDisplayVideo={setDisplayVideo}
-            socket={socket}
-            chatId={chatId}
+      <div className="w-full overflow-hidden flex h-[92.5vh]">
+        <div
+          id="user_list_container"
+          className="absolute hidden md:block bg-white bg-dark z-20 left-0 top-11 md:top-0  md:relative w-[80%] md:w-[25%]"
+        >
+          <UserList
+            userIsFetching={userIsFetching}
+            userIsError={userIsError}
+            userData={userData}
+            currentUser={currentUser}
+            setReceiverId={setReceiverId}
+            setSenderId={setSenderId}
+            onlineUsers={onlineUsers}
+            focusHandler={focusHandler}
+            setSearch={setSearch}
+            receiver={receiver}
+            setReceiverUser={setReceiverUser}
+            limit={limit}
+            setLimit={setLimit}
+          />
+        </div>
+
+        <div className="flex relative w-full md:w-[76%] overflow-hidden h-[92.5vh] flex-col border-r">
+          <ChatHeader
+            sender={sender}
+            receiver={receiver}
+            user={receiverUser ? receiverUser : currentUser}
+          />
+          <Messages
+            isLoading={isLoading}
+            isError={isError}
+            receiver={receiver}
+            sender={sender}
+            texts={texts}
+            currentUser={currentUser}
+            typing={typing}
           />
 
-          <div className="flex flex-col items-start justify-start h-[63vh] w-[25%] border shadow-2xl rounded-sm">
-            <ChatHeader sender={sender} receiver={receiver} type="small" />
-            <Messages
-              isLoading={isLoading}
-              isError={isError}
-              receiver={receiver}
-              sender={sender}
-              texts={texts}
-              currentUser={currentUser}
-              typing={typing}
-            />
-            <div ref={refer} />
-            <MessageInput
-              popup={popup}
-              typingHandler={typingHandler}
-              setMessage={setMessage}
-              sendMessageResponse={sendMessageResponse}
-              pending={pending}
-              sendHandler={sendHandler}
-              setFiles={setFiles}
-              setDescription={setDescription}
-              setMessageType={setMessageType}
-              message={message}
-              receiver={receiver}
-              sender={sender}
-              files={files}
-            />
-          </div>
+          <MessageInput
+            popup={popup}
+            typingHandler={typingHandler}
+            setMessage={setMessage}
+            pending={pending}
+            sendHandler={sendHandler}
+            setFiles={setFiles}
+            files={files}
+            setDescription={setDescription}
+            setMessageType={setMessageType}
+            message={message}
+            receiver={receiver}
+            sender={sender}
+          />
+          <div ref={refer} />
         </div>
-      ) : (
-        <div className="w-full overflow-hidden flex h-[92.5vh]">
-          <div
-            id="user_list_container"
-            className="absolute hidden md:block bg-white bg-dark z-20 left-0 top-11 md:top-0  md:relative w-[80%] md:w-[25%]"
-          >
-            <UserList
-              userIsFetching={userIsFetching}
-              userIsError={userIsError}
-              userData={userData}
-              currentUser={currentUser}
-              setReceiverId={setReceiverId}
-              setSenderId={setSenderId}
-              onlineUsers={onlineUsers}
-              focusHandler={focusHandler}
-              setRole={setRole}
-              setSearch={setSearch}
-              // setPage={setPage}
-              receiver={receiver}
-              setReceiverUser={setReceiverUser}
-              limit={limit}
-              setLimit={setLimit}
-            />
-          </div>
-
-          <div className="flex relative w-full md:w-[76%] overflow-hidden h-[92.5vh] flex-col border-r">
-            <ChatHeader
-              sender={sender}
-              receiver={receiver}
-              setDisplayVideo={setDisplayVideo}
-              displayVideo={displayVideo}
-              calling={calling}
-              caller={caller}
-              callRequest={callRequest}
-              callFlag={callFlag}
-              setCallFlag={setCallFlag}
-              callRejected={callRejected}
-              callRejectedHandler={callRejectedHandler}
-              setCalling={setCalling}
-              rejectedMessage={rejectedMessage}
-              setRejectedMessage={setRejectedMessage}
-              callAcceptHandler={callAcceptHandler}
-              user={receiverUser ? receiverUser : currentUser}
-            />
-            <Messages
-              isLoading={isLoading}
-              isError={isError}
-              receiver={receiver}
-              sender={sender}
-              texts={texts}
-              currentUser={currentUser}
-              typing={typing}
-            />{" "}
-            <div ref={refer} />
-            {/* <div className="mt-4"> */}
-            <MessageInput
-              popup={popup}
-              typingHandler={typingHandler}
-              setMessage={setMessage}
-              pending={pending}
-              sendHandler={sendHandler}
-              setFiles={setFiles}
-              files={files}
-              setDescription={setDescription}
-              setMessageType={setMessageType}
-              message={message}
-              receiver={receiver}
-              sender={sender}
-            />
-            {/* </div> */}
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

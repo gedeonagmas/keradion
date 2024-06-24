@@ -4,20 +4,18 @@ import { Diversity3, Hail, HolidayVillage, People } from "@mui/icons-material";
 
 const UserList = ({
   userIsFetching,
-  userIsError,
   userData,
   currentUser,
   setReceiverId,
   setSenderId,
   onlineUsers,
   focusHandler,
-  setRole,
   setSearch,
   receiver,
   // setPage,
   setReceiverUser,
   limit,
-  setLimit
+  setLimit,
 }) => {
   // console.log(onlineUsers);
   // console.log(userData, "user data user list");
@@ -52,7 +50,7 @@ const UserList = ({
               </svg>
             </div>
             <input
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               type="search"
               id="default-search"
               class="block w-full p-[8px] h-[44px] bg-gray-50 md:bg-gray-200 focus:ring-0 text-dark ps-10 text-sm text-gray-900 border-none bg-dark focus:outline-none"
@@ -65,56 +63,6 @@ const UserList = ({
             >
               Search
             </button> */}
-          </div>
-        </div>
-
-        <div className="flex w-full mt-[6px]s border-b border-t border-dark items-center justify-start">
-          <div
-            onClick={() => {
-              setRole("");
-              focusHandler("all-sidebar");
-            }}
-            id="all-sidebar"
-            className="flex border-b-blue-700 border border-t-0 border-l-0 border-b-0 text-blue-700 flex-col w-full p-[2px] gap-[2px] border-dark cursor-pointer border-r justify-center items-center"
-          >
-            <Diversity3 fontSize="small" />
-            <p className="">All</p>
-          </div>
-
-          <div
-            onClick={() => {
-              setRole("lawyer");
-              focusHandler("lawyer-sidebar");
-            }}
-            id="lawyer-sidebar"
-            className="flex flex-col w-full p-[2px] gap-[2px] cursor-pointer border-dark border-r justify-center items-center"
-          >
-            <HolidayVillage fontSize="small" />
-            <p className="  ">Lawyer</p>
-          </div>
-
-          <div
-            onClick={() => {
-              setRole("private-customer");
-              focusHandler("private-sidebar");
-            }}
-            id="private-sidebar"
-            className="flex flex-col w-full p-[2px] gap-[2px] border-dark  cursor-pointer justify-center border-r items-center"
-          >
-            <People fontSize="small" />
-            <p className="  ">Private</p>
-          </div>
-
-          <div
-            onClick={() => {
-              setRole("business-customer");
-              focusHandler("business-sidebar");
-            }}
-            id="business-sidebar"
-            className="flex flex-col w-full p-[2px] gap-[2px] cursor-pointer border-dark justify-center items-center"
-          >
-            <Hail fontSize="small" />
-            <p className="  ">Business</p>
           </div>
         </div>
       </div>

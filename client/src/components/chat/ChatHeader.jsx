@@ -3,26 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 // import ProfilePicture from "../ProfilePicture";
 
-const ChatHeader = ({
-  sender,
-  receiver,
-  setDisplayVideo,
-  type,
-  calling,
-  setCalling,
-  caller,
-  callRequest,
-  callFlag,
-  setCallFlag,
-  callRejected,
-  setCallRejected,
-  ringingMessage,
-  callRejectedHandler,
-  rejectedMessage,
-  setRejectedMessage,
-  user,
-  callAcceptHandler
-}) => {
+const ChatHeader = ({ sender, receiver, user }) => {
   // const user = JSON.parse(localStorage.getItem("etblink_user"));
   // console.log(user, "user list from header");
   return (
@@ -67,11 +48,7 @@ const ChatHeader = ({
             {user?.email?.substring(0, 1)}
           </div>
         )}
-        {/* <img
-          src={user?.user?.ProfilePicture}
-          alt=""
-          className="w-10 h-10 rounded-full border"
-        /> */}
+
         <div className="flex-1 min-w-0">
           <p className=" font-medium text-gray-900 truncate dark:text-white">
             {user?.email}
