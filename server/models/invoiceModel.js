@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const valid = require("../utils/validator");
 const invoiceSchema = new mongoose.Schema(
   {
+    invoiceId:{
+      type:String
+    },
     email: {
       type: String,
       validate: valid.email("Email"),

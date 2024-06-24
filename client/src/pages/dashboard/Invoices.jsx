@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LoadingButton from "../../components/loading/LoadingButton";
 import {
+  useDeleteMutation,
   useLazyReadQuery,
   useUpdateMutation,
 } from "../../features/api/apiSlice";
@@ -11,6 +12,9 @@ import Pop from "../../components/Pop";
 import Tables from "../../components/Tables";
 import ResponsivePagination from "react-responsive-pagination";
 import "./../../assets/pagination.css";
+import jsPDF from "jspdf";
+import { utils, writeFile } from "xlsx";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Invoices = () => {
   const user = JSON.parse(localStorage.getItem("keradion_user"));
@@ -35,11 +39,12 @@ const Invoices = () => {
     });
   }, [page, search]);
 
-  const [deleteData, deleteResponse] = useUpdateMutation();
+  const [deleteData, deleteResponse] = useDeleteMutation();
   const [deletePending, setDeletePending] = useState(false);
 
   const [popup, setPopup] = useState(false);
   const [id, setId] = useState("");
+  const [invoice, setInvoice] = useState("");
   const [value, setValue] = useState(true);
 
   const deleteHandler = () => {
@@ -52,6 +57,18 @@ const Invoices = () => {
   };
 
   console.log(user?._id, "user");
+  const [quantity, setQuantity] = useState(0);
+  const [amount, setAmount] = useState(0);
+  useEffect(() => {
+    let totalAmount = 0;
+    let totalQuantity = 0;
+    invoice?.products?.map((e) => {
+      totalAmount += e?.price * 1;
+      totalQuantity += e?.quantity * 1;
+    });
+    setAmount(totalAmount);
+    setQuantity(totalQuantity);
+  }, [invoice]);
 
   useEffect(() => {
     if (deleteResponse?.status === "fulfilled") {
@@ -59,13 +76,42 @@ const Invoices = () => {
     }
   }, [deleteResponse]);
 
+  // pdf generator
+  const licenseCertificatedRef = useRef(null);
+  const handleGeneratePdf = async () => {
+    const inputData = licenseCertificatedRef.current;
+    try {
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "pt",
+        format: "a4",
+      });
+
+      pdf.html(inputData, {
+        callback: function (pdf) {
+          pdf.save("invoices.pdf");
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //xlsx style sheet
+  const handleXlsxGenerate = (invoice) => {
+    var wb = utils.book_new(),
+      ws = utils.json_to_sheet(invoice);
+    utils.book_append_sheet(wb, ws, "Inovice Sheet");
+    writeFile(wb, "invoice.xlsx");
+  };
+
   const columns = [
     {
-      name: "NO",
+      name: "ID",
       selector: (row, i) => i + 1,
-      cell: (row, i) => <div className="">{i + 1}</div>,
+      cell: (row, i) => <div className="">{row?.invoiceId}</div>,
       sortable: true,
-      width: "80px",
+      width: "170px",
     },
     {
       name: "RECIPIENT",
@@ -95,22 +141,30 @@ const Invoices = () => {
       width: "130px",
     },
 
-    {
-      name: "AMOUNT",
-      selector: (row) => row.amount,
-      cell: (row) => <div className="">{row?.amount}</div>,
-      sortable: true,
-      width: "100px",
-    },
+    // {
+    //   name: "AMOUNT",
+    //   selector: (row) => row.amount,
+    //   cell: (row) => <div className="">{row?.amount}</div>,
+    //   sortable: true,
+    //   width: "100px",
+    // },
     {
       name: "Actions",
       cell: (row) => (
         <div className="flex gap-1 justify-between items-center">
           <button
             onClick={() => {
-              setPopup(true);
               setId(row._id);
-              setValue(row?.isActive ? false : true);
+              setPopup(true);
+            }}
+            className="px-1 py-1 flex gap-1 items-center w-7 bg-pink-400 text-white rounded-lg"
+          >
+            <DeleteIcon fontSize="small" />
+          </button>
+          <button
+            onClick={() => {
+              setInvoice(row);
+              handleGeneratePdf();
             }}
             className="px-1 py-1 flex gap-1 items-center w-16 bg-red-500 text-white rounded-lg"
           >
@@ -134,11 +188,7 @@ const Invoices = () => {
             Pdf
           </button>
           <button
-            onClick={() => {
-              setPopup(true);
-              setId(row._id);
-              setValue(row?.isActive ? false : true);
-            }}
+            onClick={() => handleXlsxGenerate([row])}
             className="px-1 flex items-center gap-1 py-1 w-32 bg-emerald-500 text-white rounded-lg"
           >
             <svg
@@ -159,7 +209,7 @@ const Invoices = () => {
             Spreed Sheet
           </button>
           <a
-            href={`/dashboard/${user?.role}/invoices/manage?id=${row?._id}`}
+            href={`/dashboard/${user?.role}/invoices/detail?id=${row?._id}`}
             className="px-1 flex items-center gap-1 py-1 w-20 bg-yellow-400 text-white rounded-lg"
           >
             more
@@ -186,7 +236,7 @@ const Invoices = () => {
     },
   ];
 
-  console.log(search, page, "invoices");
+  console.log(invoices, "invoices");
   return (
     <div className="flex px-[4%] min-h-[85vh] pb-5 relative bg-dark bg-white flex-col h-auto w-full gap-5">
       <Response response={deleteResponse} setPending={setDeletePending} />
@@ -245,6 +295,158 @@ const Invoices = () => {
           }
         />
       )}
+
+      <p className="text-lg font-bold mt-10 ml-20">PDF Format</p>
+
+      <div
+        ref={licenseCertificatedRef}
+        class="max-w-2xl mx-auto p-4 bg-white border rounded shadow-sm my-2"
+        id="invoice"
+      >
+        <div class="grid grid-cols-2 items-center">
+          <p className="text-2xl font-bold uppercase">{invoice?.companyName}</p>
+
+          <div class="text-right">
+            <p>Tailwind Inc.</p>
+            <p class="text-gray-500 text-sm">info@keradiondesign.com</p>
+            <p class="text-gray-500 text-sm mt-1">+251 954104637</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 items-center mt-4">
+          <div>
+            <p class="font-bold text-gray-800">Bill to :</p>
+            <p class="text-gray-500">
+              {invoice?.firstName}
+              {invoice?.lastName}
+            </p>
+            <p className="text-gray-500">{invoice?.address}</p>
+            <p class="text-gray-500"> {invoice?.email}</p>
+            <p class="text-gray-500"> {invoice?.phone}</p>
+          </div>
+
+          <div class="text-right">
+            <p class="">
+              {" "}
+              Invoice number:
+              <span class="text-gray-500 ml-2">{invoice?.invoiceId}</span>
+            </p>
+            <p>
+              Invoice date:{" "}
+              <span class="text-gray-500">{format(invoice?.createdAt)}</span>
+              <br />
+              Due date:
+              <span class="text-gray-500">{invoice?.date}</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="-mx-4 flow-root sm:mx-0">
+          <table class="min-w-full">
+            <thead class="border-b border-gray-300 text-gray-900">
+              <tr>
+                <th
+                  scope="col"
+                  class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                >
+                  Items
+                </th>
+                <th
+                  scope="col"
+                  class="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell"
+                >
+                  Quantity
+                </th>
+                <th
+                  scope="col"
+                  class="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell"
+                >
+                  Price
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoice?.products?.map((e) => {
+                return (
+                  <tr class="border-b border-gray-200">
+                    <td class="max-w-0 py-5 pl-4 pr-3 text-sm sm:pl-0">
+                      <div class="font-medium text-gray-900">{e?.item}</div>
+                    </td>
+                    <td class="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">
+                      {e?.quantity}
+                    </td>
+                    <td class="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">
+                      {e?.price}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th
+                  scope="row"
+                  colspan="3"
+                  class="hidden pl-4 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0"
+                >
+                  Total quantity: <span className="text-black"> </span>
+                </th>
+                <th
+                  scope="row"
+                  class="pl-6 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden"
+                >
+                  Subtotal
+                </th>
+                <td class="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">
+                  {quantity}
+                </td>
+              </tr>
+              <tr>
+                <th
+                  scope="row"
+                  colspan="3"
+                  class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0"
+                >
+                  Tax
+                </th>
+                <th
+                  scope="row"
+                  class="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden"
+                >
+                  Tax
+                </th>
+                <td class="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">
+                  {invoice?.amount * 0.05} birr
+                </td>
+              </tr>
+
+              <tr>
+                <th
+                  scope="row"
+                  colspan="3"
+                  class="hidden pl-4 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0"
+                >
+                  Total
+                </th>
+                <th
+                  scope="row"
+                  class="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden"
+                >
+                  Total
+                </th>
+                <td class="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">
+                  {invoice?.amount} birr
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="border-t-2 pt-2 text-xs text-gray-500 text-center mt-2">
+          Please pay the invoice before the due date. You can pay the invoice by
+          logging in to your account from our client portal.
+        </div>
+      </div>
     </div>
   );
 };

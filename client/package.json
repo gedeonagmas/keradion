@@ -16,12 +16,12 @@
     "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.11",
     "@react-google-maps/api": "^2.19.3",
-    "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^1.9.3",
     "apexcharts": "^3.45.1",
     "axios": "^1.6.8",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.7.2",
+    "jspdf": "^2.5.1",
     "peerjs": "^1.5.2",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
@@ -47,7 +47,8 @@
     "tailwind-scrollbar": "^3.1.0",
     "timeago.js": "^4.0.2",
     "tw-elements-react": "^1.0.0-alpha2",
-    "typography": "^0.16.24"
+    "typography": "^0.16.24",
+    "xlsx": "^0.17.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

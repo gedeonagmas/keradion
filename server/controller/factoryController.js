@@ -9,11 +9,19 @@ const _create = asyncCatch(async (req, res, next) => {
   const model = selectModel(req.params.table, next);
   console.log(req.body);
   if (model) {
+    const count = (await model.countDocuments()) + 1;
+
     const data = await model.create({
       ...req.body,
       profilePicture: req.files?.profilePicture
         ? api + req.files.profilePicture[0]?.filename
         : undefined,
+      invoiceId:
+        "INV" +
+        "-" +
+        new Date()?.toISOString()?.split("T")[0]?.replaceAll("/", "-") +
+        "-" +
+        count.toString().padStart(3, "0"),
     });
 
     if (!data)

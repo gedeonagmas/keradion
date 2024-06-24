@@ -76,7 +76,8 @@ const InvoicesCreate = () => {
         redirectTo={`/dashboard/${user?.role}/invoices`}
       />
 
-      <div class="bg-white dark:bg-gray-700 dark:text-white text-gray-700 rounded-sm shadow-lg px-5 py-10 w-full md:w-[80%] md:px-main mx-auto">
+      <div class="from-white to-blue-200 bg-gradient-to-tl dark:bg-gray-700 dark:text-white text-gray-700 rounded-sm shadow-lg px-5 py-10 w-full md:w-[90%] md:px-main mx-auto">
+        <p className="text-lg font-bold mb-3">Invoice</p>{" "}
         <div class="flex flex-col md:flex-row items-start gap-2 justify-between mb-8">
           <div class="flex flex-col">
             <div class="text-sm mb-2">Your Company Name</div>
@@ -101,50 +102,52 @@ const InvoicesCreate = () => {
         </div>
         <div class="border-b-2 border-gray-300 pb-8 mb-8">
           <h2 class="text-2xl font-bold mb-4">Bill To:</h2>
-          <div class="flex mb-2 flex-col">
-            <div class="text-sm mb-2">First Name</div>
-            <input
-              onChange={(e) => setFirstName(e.target.value)}
-              type="text"
-              placeholder="First Name"
-              className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
-            />
-          </div>
-          <div class="flex mb-2 flex-col">
-            <div class="text-sm mb-2">Last Name</div>
-            <input
-              onChange={(e) => setLastName(e.target.value)}
-              type="text"
-              placeholder="Last Name"
-              className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
-            />
-          </div>
-          <div class="flex mb-2 flex-col">
-            <div class="text-sm mb-2">Phone</div>
-            <input
-              onChange={(e) => setPhone(e.target.value)}
-              type="text"
-              placeholder="Phone"
-              className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
-            />
-          </div>
-          <div class="flex mb-2 flex-col">
-            <div class="text-sm mb-2">Address</div>
-            <input
-              onChange={(e) => setAddress(e.target.value)}
-              type="text"
-              placeholder="bole, addiss ababa, ethiopia"
-              className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
-            />
-          </div>
-          <div class="flex mb-2 flex-col">
-            <div class="text-sm mb-2">Email</div>
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              placeholder="Email"
-              className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
-            />
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-3">
+            <div class="flex mb-2 flex-col">
+              <div class="text-sm mb-2">First Name</div>
+              <input
+                onChange={(e) => setFirstName(e.target.value)}
+                type="text"
+                placeholder="First Name"
+                className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
+              />
+            </div>
+            <div class="flex mb-2 flex-col">
+              <div class="text-sm mb-2">Last Name</div>
+              <input
+                onChange={(e) => setLastName(e.target.value)}
+                type="text"
+                placeholder="Last Name"
+                className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
+              />
+            </div>
+            <div class="flex mb-2 flex-col">
+              <div class="text-sm mb-2">Phone</div>
+              <input
+                onChange={(e) => setPhone(e.target.value)}
+                type="text"
+                placeholder="Phone"
+                className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
+              />
+            </div>
+            <div class="flex mb-2 flex-col">
+              <div class="text-sm mb-2">Address</div>
+              <input
+                onChange={(e) => setAddress(e.target.value)}
+                type="text"
+                placeholder="bole, addiss ababa, ethiopia"
+                className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
+              />
+            </div>
+            <div class="flex mb-2 flex-col">
+              <div class="text-sm mb-2">Email</div>
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
+                className="w-52 bg-dark h-8 p-1 px-2 rounded-sm border"
+              />
+            </div>
           </div>
         </div>
         <label
