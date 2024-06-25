@@ -16,7 +16,7 @@ const Login = () => {
   return (
     <section class="bg-gray-500 px-5 w-full h-full flex items-center justify-center dark:bg-gray-900">
       <Response response={loginResponse} setPending={setPending} type="login" />{" "}
-      <div class="flex flex-col items-center justify-center px-6 py-2 mx-auto md:h-screen lg:py-0">
+      <div class="flex flex-col items-center justify-center px-6 py-2 mx-auto h-screen lg:py-0">
         <div class="w-[375px] md:w-[400px] bg-white px-5 rounded-lg shadow dark:border xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div class="px-4 py-4">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
