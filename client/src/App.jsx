@@ -130,8 +130,12 @@ function App() {
                     element={<Invoices />}
                   ></Route>
                   <Route
-                    path="/dashboard/admin/users"
-                    element={<Invoices />}
+                    path="/dashboard/admin/invoices/create"
+                    element={<InvoicesCreate />}
+                  ></Route>
+                  <Route
+                    path="/dashboard/admin/invoices/detail"
+                    element={<InvoicesDetail />}
                   ></Route>
                 </>
               )}
