@@ -78,7 +78,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeTemplate />}>
             <Route path="/" element={<Home />}></Route>
-            {!user && admin?.total === 0 && (
+            {!user && (
               <Route path="/signup" element={<SignUp type="user" />}></Route>
             )}
             {admin?.total === 0 && (
