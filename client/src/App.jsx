@@ -60,6 +60,7 @@ import UsersProfile from "./pages/dashboard/UsersProfile";
 import Login from "./pages/Login";
 import InvoicesDetail from "./pages/dashboard/InvoicesDetail";
 import InvoicesCreate from "./pages/dashboard/InvoicesCreate";
+import Overview from "./pages/dashboard/Overview";
 // import ChangePassword from "./pages/dashboard/ChangePassword";
 
 function App() {
@@ -70,14 +71,15 @@ function App() {
     tag: ["users"],
   });
 
+  console.log(user, admin, "user from app js");
   return (
     <Flowbite>
       <div className="font-poppins text-black overflow-hidden text-dark bg-dark">
         <Routes>
           <Route path="/" element={<HomeTemplate />}>
             <Route path="/" element={<Home />}></Route>
-            {!user && admin?.total !== 0 && (
-              <Route path="/signup" element={<SignUp />}></Route>
+            {!user && admin?.total === 0 && (
+              <Route path="/signup" element={<SignUp type="user" />}></Route>
             )}
             {admin?.total === 0 && (
               <Route
@@ -89,16 +91,15 @@ function App() {
             <Route path="/forget" element={<Forget />}></Route>
             <Route path="/reset" element={<Reset />}></Route>
           </Route>
-          <Route path="*" element={<PageNotFound />}></Route>
 
-          {user ? (
+          {user && (
             <Route path="/dashboard" element={<Dashboard />}>
+              <Route path={`/dashboard`} element={<Overview />}></Route>
               <Route
                 path={`/dashboard/${user?.role}`}
-                element={<Invoices />}
+                element={<Overview />}
               ></Route>
-              {/* <Route path="/dashboard" element={<PageNotFound />}></Route> */}
-              {user.role === "user" ? (
+              {user.role === "user" && (
                 <>
                   <Route
                     path="/dashboard/user/profile"
@@ -117,10 +118,8 @@ function App() {
                     element={<InvoicesDetail />}
                   ></Route>
                 </>
-              ) : (
-                <Route path="*" element={<PageNotFound />}></Route>
               )}
-              {user.role === "admin" ? (
+              {user.role === "admin" && (
                 <>
                   <Route
                     path="/dashboard/admin/profile"
@@ -135,15 +134,16 @@ function App() {
                     element={<Invoices />}
                   ></Route>
                 </>
-              ) : (
-                <Route path="*" element={<PageNotFound />}></Route>
               )}
 
               <Route path="/dashboard/message" element={<Message />}></Route>
+              <Route
+                path="/dashboard/change-password"
+                element={<ChangePassword />}
+              ></Route>
             </Route>
-          ) : (
-            <Route path="*" element={<PageNotFound />}></Route>
           )}
+          <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
       </div>
     </Flowbite>

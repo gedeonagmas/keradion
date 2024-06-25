@@ -1,17 +1,21 @@
 import { DarkThemeToggle } from "flowbite-react";
 import { useState } from "react";
 import Response from "../components/Response";
+import logo from "./../assets/logo.png";
+
 import { useReadQuery, useUserLogoutMutation } from "../features/api/apiSlice";
 
 const Header = () => {
   const user = JSON.parse(localStorage.getItem("keradion_user"));
+  const fetchBy = user?.role === "user" ? `user=${user?._id}` : "";
+
   const {
     data: invoices,
     isFetching: invoicesIsFetching,
     isError: invoicesIsError,
   } = useReadQuery({
-    url: `/user/invoices?saver[eq]=${user?.user?._id}&populatingType=invoices&populatingValue=company,saver`,
-    tag: ["invoices", "company"],
+    url: `/user/invoices?${fetchBy}`,
+    tag: ["invoices"],
   });
 
   const [pending, setPending] = useState(false);
@@ -21,6 +25,7 @@ const Header = () => {
     logout({});
   };
 
+  console.log(invoices, "invoices");
   return (
     <div className="fixed w-full z-50 bg-white bg-dark">
       <Response
@@ -31,24 +36,29 @@ const Header = () => {
       />
       <div className="flex lg:hidden fixed top-0 left-0 z-50 flex-col items-center w-full h-auto py-10 ">
         <div className="flex bg-white bg-dark -mt-12 justify-between items-center px-2 h-full w-full">
-          <p className="text-lg font-bold text-main">KERADION</p>
+          <a href="/" class="flex flex-col mt-2 ms-2 md:me-24">
+            <img src={logo} className="w-full h-14" alt="" />
+          </a>
           {user ? (
             <div className="flex items-center gap-3">
               <p className="px-2 hidden lg:block py-1 rounded-xl bg-main">
                 {user.email.split("@")[0]}
               </p>
-              <a href={`/dashboard`} className="cursor-pointer">
+              <a href={`/dashboard/${user?.role}`} className="cursor-pointer">
                 Dashboard
               </a>
 
-              <a href={`/dashboard/invoices`} className="cursor-pointer">
+              <a
+                href={`/dashboard/${user?.role}/invoices`}
+                className="cursor-pointer"
+              >
                 <div className="items-center flex flex-col justify-center">
                   <button
                     type="button"
                     class="relative inline-flex items-center text-sm font-medium text-center"
                   >
                     <svg
-                      class="w-7 h-7"
+                      class="w-6 h-6 text-gray-800 dark:text-white"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -56,10 +66,14 @@ const Header = () => {
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
 
-                    {invoices?.data?.length > 0 && (
+                    {invoices && (
                       <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs p-1 font-bold text-white bg-main border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
                         {invoices?.data?.length}
                       </div>
@@ -73,25 +87,9 @@ const Header = () => {
               <div className="">
                 <a
                   href="/login"
-                  onClick={() => setLoginForm(!loginForm)}
                   className={`cursor-pointer px-3 h-[70px] absolute -top-5 hover:text-white pt-5 -left-[70px] flex `}
                 >
                   Login
-                  <svg
-                    className="w-2.5 h-2.5 mt-1.5 ms-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
                 </a>
               </div>
               <p className="text-gray-600">|</p>
@@ -164,7 +162,7 @@ const Header = () => {
             </li>
             <li className="" role="presentation">
               <a
-                href="/dashboard/invoices"
+                href={`/dashboard/${user?.role}/invoices`}
                 className="inline-block hover:text-[rgb(252,45,45)]  w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-300  focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 gap-3"
               >
                 Invoices
@@ -196,7 +194,7 @@ const Header = () => {
                 <p className="px-2 py-1 rounded-xl bg-main">
                   {user.email.split("@")[0]}
                 </p>
-                <a href={`/dashboard`} className="cursor-pointer">
+                <a href={`/dashboard/${user?.role}`} className="cursor-pointer">
                   Dashboard
                 </a>
                 <a
@@ -206,10 +204,10 @@ const Header = () => {
                   <div className="items-center flex flex-col justify-center">
                     <button
                       type="button"
-                      class="relative inline-flex items-center p-1s text-sm font-medium text-center t"
+                      class="relative inline-flex items-center text-sm font-medium text-center"
                     >
                       <svg
-                        class="w-7 h-7"
+                        class="w-6 h-6 "
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -217,10 +215,14 @@ const Header = () => {
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
-                        <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z" />
+                        <path
+                          fill-rule="evenodd"
+                          d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z"
+                          clip-rule="evenodd"
+                        />
                       </svg>
 
-                      {invoices?.data?.length > 0 && (
+                      {invoices && (
                         <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs p-1 font-bold text-white bg-main border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
                           {invoices?.data?.length}
                         </div>
@@ -237,25 +239,9 @@ const Header = () => {
                 <div className="relative">
                   <a
                     href="/login"
-                    // onMouseOver={() => setLoginForm(true)}
-                    className={`cursor-pointer bg-gray-900 px-3 h-12 absolute -top-3 pt-3 -left-[70px] flex `}
+                    className={`cursor-pointer px-3 h-12 absolute -top-3 pt-3 -left-[70px] flex `}
                   >
                     Login
-                    <svg
-                      className="w-2.5 h-2.5 mt-1.5 ms-3"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 10 6"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 1 4 4 4-4"
-                      />
-                    </svg>
                   </a>
                 </div>
                 <p className="text-gray-600">|</p>
@@ -284,8 +270,10 @@ const Header = () => {
             <li className="me-2">
               <div className="flex items-center justify-center gap-6">
                 {/*  */}
-                <div className="flex absolute z-20 shadow-sm -top-[50px] left-[8%] h-auto w-[120px] gap-3 items-center justify-center">
-                  <div className="text-xl text-main font-bold">KERADION</div>
+                <div className="flex absolute z-20 shadow-sm -top-[50px] left-[8%] h-auto w-[200px] gap-3 items-center justify-center">
+                  <a href="/" class="flex flex-col ms-2 md:me-24">
+                    <img src={logo} className="w-20 h-10" alt="" />
+                  </a>
                 </div>
               </div>
             </li>

@@ -20,8 +20,8 @@ const ChangePassword = () => {
       <Response
         response={updateResponse}
         setPending={setPending}
-        type="reset"
-        redirectTo="/"
+        type="logout"
+        redirectTo="/login"
       />
       <div className="mb-5 w-full lg:w-[400px]">
         <label

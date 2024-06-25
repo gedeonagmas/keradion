@@ -5,39 +5,20 @@ import {
   useCreateMutation,
   useLazyReadChatQuery,
   useLazyReadQuery,
-  useReadQuery,
 } from "../features/api/apiSlice";
 import Response from "../components/Response";
-import LoadingButton from "../components/loading/LoadingButton";
-import Loading from "../components/loading/Loading";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-// import customerImage from "../../../../assets/images/customers/customer-i.jpg";
-import Peer from "peerjs";
-import { PushPinOutlined } from "@mui/icons-material";
 import Messages from "../components/chat/Messages";
 import MessageInput from "../components/chat/MessageInput";
 import ChatHeader from "../components/chat/ChatHeader";
 import UserList from "../components/chat/UserList";
-import Video from "../components/chat/Video";
-// import "./scroll.css";
 
 const Message = () => {
-  const navigate = useNavigate();
   const [socket, setSocket] = useState(null);
-  //   const [currentUser, setCurrentUser] = useState();
-  const currentUser = JSON.parse(localStorage.getItem("makuta_user"));
+  const currentUser = JSON.parse(localStorage.getItem("keradion_user"));
 
   const [sendMessageData, sendMessageResponse] = useCreateMutation();
   const [sender, setSenderId] = useState("");
   const [receiver, setReceiverId] = useState("");
-  //   console.log(user, "users current");
-  //   useEffect(() => {
-  //     user &&
-  //       setCurrentUser({
-  //         _id: user?._id,
-  //         email: user?.email,
-  //       });
-  //   }, [user]);
 
   const [onlineUsers, setOnlineUsers] = useState();
   const [message, setMessage] = useState("");
@@ -49,6 +30,7 @@ const Message = () => {
   const [messageType, setMessageType] = useState("text");
   const [description, setDescription] = useState("");
   const refer = useRef(null);
+  const [receiverUser, setReceiverUser] = useState("");
 
   const [trigger, { data: messageData, isLoading, isError }] =
     useLazyReadChatQuery({ refetchOnFocus: false });
@@ -56,16 +38,13 @@ const Message = () => {
   useEffect(() => {
     if (receiver && sender) {
       trigger({
-        url: `/chat/${sender}.${receiver}?populatingType=chats&populatingValue=sender,receiver`,
+        url: `/chat/${sender}.${receiver}?populate=sender,receiver`,
         tag: ["chats"],
       });
     }
   }, [receiver, sender]);
 
-  // const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  // const [totalPage, setTotalPage] = useState(1);
-  const [role, setRole] = useState("");
   const [limit, setLimit] = useState(30);
 
   const [
@@ -73,19 +52,13 @@ const Message = () => {
     { data: userDatas, isFetching: userIsFetching, isError: userIsError },
   ] = useLazyReadQuery();
 
-  // useEffect(() => {
-  //   setPage(1);
-  // }, []);
-
   useEffect(() => {
-    const roles = role?.length > 0 ? `&role=${role}` : "";
     userDataTrigger({
-      url: `/user/users?limit=${limit}${roles}&searchField=email&searchValue=${search}&populatingValue=user`,
+      url: `/user/users?limits=${limit}&searchField=email&searchValue=${search}`,
       tag: ["users"],
     });
   }, [limit, search]);
 
-  console.log(limit, search, role, "user list fetching");
   const [userData, setUserData] = useState([]);
   useEffect(() => {
     const aa = [];
@@ -94,6 +67,10 @@ const Message = () => {
     });
     setUserData(aa);
   }, [userDatas]);
+
+  useEffect(() => {
+    setReceiverUser(currentUser);
+  }, []);
 
   useEffect(() => {
     setSocket(io("http://localhost:5001"));
@@ -186,6 +163,7 @@ const Message = () => {
       setFiles("");
       popup("file-send");
       setDescription("");
+      setMessage("");
     }
   }, [sendMessageResponse]);
 
@@ -196,13 +174,13 @@ const Message = () => {
   }, [sendMessageResponse]);
 
   return (
-    <div className="flex text-xs overflow-hidden relative">
+    <div className="flex -mt-6 mr-1 text-xs bg-white bg-dark overflow-hidden relative">
       <Response response={sendMessageResponse} setPending={setPending} />
 
-      <div className="w-full overflow-hidden flex h-[92.5vh]">
+      <div className="w-full bg-white bg-dark overflow-hidden flex h-[88vh]">
         <div
           id="user_list_container"
-          className="absolute hidden md:block bg-white bg-dark z-20 left-0 top-11 md:top-0  md:relative w-[80%] md:w-[25%]"
+          className="absolute hidden md:block bg-white bg-dark z-20 left-0 top-0 md:top-0  md:relative w-[80%] md:w-[25%]"
         >
           <UserList
             userIsFetching={userIsFetching}
@@ -212,7 +190,6 @@ const Message = () => {
             setReceiverId={setReceiverId}
             setSenderId={setSenderId}
             onlineUsers={onlineUsers}
-            focusHandler={focusHandler}
             setSearch={setSearch}
             receiver={receiver}
             setReceiverUser={setReceiverUser}
@@ -221,10 +198,9 @@ const Message = () => {
           />
         </div>
 
-        <div className="flex relative w-full md:w-[76%] overflow-hidden h-[92.5vh] flex-col border-r">
+        <div className="flex relative w-full md:w-[76%] bg-blue-500 overflow-hidden h-[86.6vh] flex-col border-r">
           <ChatHeader
-            sender={sender}
-            receiver={receiver}
+            onlineUsers={onlineUsers}
             user={receiverUser ? receiverUser : currentUser}
           />
           <Messages
@@ -235,6 +211,7 @@ const Message = () => {
             texts={texts}
             currentUser={currentUser}
             typing={typing}
+            refer={refer}
           />
 
           <MessageInput
@@ -251,7 +228,6 @@ const Message = () => {
             receiver={receiver}
             sender={sender}
           />
-          <div ref={refer} />
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useUserRegisterMutation } from "../features/api/apiSlice";
 import Response from "../components/Response";
 import { useState } from "react";
 
-const SignUp = () => {
+const SignUp = ({ type }) => {
   const [signupData, signupResponse] = useUserRegisterMutation();
   const [pending, setPending] = useState(false);
   const [email, setEmail] = useState("");
@@ -21,6 +21,7 @@ const SignUp = () => {
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
     formData.append("profilePicture", profilePicture);
+    formData.append("role", type);
     formData.append("url", `/user/signup`);
     formData.append("tag", ["users"]);
     signupData(formData);

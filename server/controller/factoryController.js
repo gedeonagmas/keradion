@@ -90,8 +90,9 @@ const _read = asyncCatch(async (req, res, next) => {
     const skip = (page - 1) * limit;
     query.skip(skip).limit(limit);
 
+    console.log(req.query);
     //populating
-    query.populate(req?.query?.populate?.split(",").join(" "));
+    query?.populate(req?.query?.populate?.split(",").join(" "));
 
     req.query.limits ? query.limit(req.query.limits) : null;
 
@@ -123,11 +124,12 @@ const _read = asyncCatch(async (req, res, next) => {
 //update
 const _update = asyncCatch(async (req, res, next) => {
   const model = selectModel(req.params.table, next);
-  // console.log(req.files.profilePicture[0]?.filename);
+
   //remove persistent data from being updated
   const remove = ["password", "role"];
   remove.forEach((el) => delete req.params[el]);
 
+  console.log(model, req.params);
   if (model) {
     const data = await model.findOneAndUpdate(
       { _id: req.query.id },

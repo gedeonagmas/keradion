@@ -63,9 +63,9 @@ const forgetPassword = asyncCatch(async (req, res, next) => {
 
   const resetTokenUrl = await user.createResetToken();
   await user.save({ validateBeforeSave: true });
-  const passwordResetUrl = `${api}?${resetTokenUrl}`; // this url will sent via email
+  const passwordResetUrl = `${"http://localhost:4000/reset"}?${resetTokenUrl}`; // this url will sent via email
 
-  const subject = "Reset your password";
+  const subject = "Keradion Designs --> Reset your password";
   const response =
     "We have just sent a verification link via your email address please check. it's valid only for 30 minutes";
   const html = `<div>This is your verification link click <a style={{background:'yellow',padding:'5px', border-radius:'20px',color:white,padding:10px;}} href="${passwordResetUrl}">here</a> to reset your password</div>`;

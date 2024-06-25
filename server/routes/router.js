@@ -29,7 +29,7 @@ const chatRouter = express.Router();
 
 const files = upload.fields([
   { name: "profilePicture", maxCount: 1 },
-  { name: "chatFiles", maxCount: 10 },
+  { name: "chatFile", maxCount: 10 },
 ]);
 
 //user account route
@@ -43,13 +43,13 @@ router.route("/forgetPassword").post(forgetPassword);
 
 router.route("/resetPassword").post(resetPassword);
 
-router.route("/updatePassword").post(updatePassword);
+router.route("/updatePassword").put(authentication, updatePassword);
 
 //factory route
 router
   .route("/:table")
   .post(authentication, files, _create)
-  .get(_read)
+  .get(authentication, _read)
   .put(authentication, files, _update)
   .delete(authentication, _delete);
 

@@ -6,7 +6,7 @@ const List = (props) => {
           return (
             <div
               key={e?.name}
-              className=" w-full h-11 border border-dark min-h-10  px-2 rounded-sm border-gray-300 bg-gray-50 bg-dark flex items-center justify-between gap-2"
+              className=" w-full h-11 border border-dark min-h-10  rounded-sm border-gray-300 bg-gray-50 bg-dark flex items-center justify-between gap-2"
             >
               <p className="h-auto w-full  p-2 mt-2">
                 {e?.item?.length > 12
@@ -79,32 +79,6 @@ const List = (props) => {
               className="w-full bg-dark m-2 h-8 p-1 px-2 rounded-sm border"
             />
           </td>
-          {/* <td>
-              <input
-                type="text"
-                placeholder="name"
-                className="w-32 bg-dark m-2 h-8 p-1 px-2 rounded-sm border"
-              />
-            </td> */}
-          {/* <td className="">
-              <svg
-                class="w-6 hover:text-main ml-5 h-6 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
-            </td> */}
         </tr>
         <svg
           onClick={props.addLists}

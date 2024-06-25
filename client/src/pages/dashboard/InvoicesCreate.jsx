@@ -163,7 +163,7 @@ const InvoicesCreate = () => {
             <p class=" font-bold uppercase py-2">Price</p>
             <p class=" font-bold uppercase py-2">Action</p>
           </div>
-          <div>
+          <div className="w-full">
             <List
               list={product}
               setList={setProduct}
@@ -183,7 +183,7 @@ const InvoicesCreate = () => {
         </div>
         <div class="flex justify-end mb-8">
           <div class=" mr-2">Tax:</div>
-          <div class="">{(amount * 0.4).toFixed(2)} birr</div>
+          <div class="">{(amount * 0.05).toFixed(2)} birr</div>
         </div>
         <div class="flex justify-end mb-8">
           <div class=" mr-2">Total Amount:</div>

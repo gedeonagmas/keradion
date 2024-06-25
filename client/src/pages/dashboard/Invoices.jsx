@@ -3,7 +3,6 @@ import LoadingButton from "../../components/loading/LoadingButton";
 import {
   useDeleteMutation,
   useLazyReadQuery,
-  useUpdateMutation,
 } from "../../features/api/apiSlice";
 import Response from "../../components/Response";
 import { format } from "timeago.js";
@@ -33,12 +32,12 @@ const Invoices = () => {
   }, [invoices]);
 
   useEffect(() => {
+    const fetchBy = user?.role === "user" ? `user=${user?._id}` : "";
     trigger({
-      url: `/user/invoices?user=${user?._id}&limit=10&page=${page}&searchField=firstName&searchValue=${search}`,
+      url: `/user/invoices?${fetchBy}&limit=10&page=${page}&searchField=firstName&searchValue=${search}`,
       tag: ["invoices"],
     });
   }, [page, search]);
-
   const [deleteData, deleteResponse] = useDeleteMutation();
   const [deletePending, setDeletePending] = useState(false);
 
@@ -141,13 +140,6 @@ const Invoices = () => {
       width: "130px",
     },
 
-    // {
-    //   name: "AMOUNT",
-    //   selector: (row) => row.amount,
-    //   cell: (row) => <div className="">{row?.amount}</div>,
-    //   sortable: true,
-    //   width: "100px",
-    // },
     {
       name: "Actions",
       cell: (row) => (
@@ -282,7 +274,7 @@ const Invoices = () => {
       </div>
       {popup && (
         <Pop
-          content="Are you sure you want to remove this price?"
+          content="Are you sure you want to remove this invoice?"
           cancel={setPopup}
           trigger={
             <LoadingButton
@@ -296,18 +288,17 @@ const Invoices = () => {
         />
       )}
 
-      <p className="text-lg font-bold mt-10 ml-20">PDF Format</p>
-
       <div
         ref={licenseCertificatedRef}
         class="max-w-2xl mx-auto p-4 bg-white border rounded shadow-sm my-2"
         id="invoice"
       >
+        <p className="text-lg font-bold">PDF Format</p>
         <div class="grid grid-cols-2 items-center">
           <p className="text-2xl font-bold uppercase">{invoice?.companyName}</p>
 
           <div class="text-right">
-            <p>Tailwind Inc.</p>
+            <p>Keradion</p>
             <p class="text-gray-500 text-sm">info@keradiondesign.com</p>
             <p class="text-gray-500 text-sm mt-1">+251 954104637</p>
           </div>

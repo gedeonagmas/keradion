@@ -1,7 +1,6 @@
 import React from "react";
 import Loading from "../loading/Loading";
 import { format } from "timeago.js";
-// import ProfilePicture from "../ProfilePicture";
 import "./typing.css";
 
 const Messages = ({
@@ -11,29 +10,19 @@ const Messages = ({
   sender,
   texts,
   currentUser,
-  typing
+  refer,
+  typing,
 }) => {
-  // console.log(texts, "texts");
-  // const handleDownload = (url) => {
-  //   console.log(url, "url");
-  //   const fileName = url.split("/").pop();
-  //   const aTag = document.createElement("a");
-  //   aTag.href = url;
-  //   aTag.setAttribute("download", url);
-  //   document.body.appendChild(aTag);
-  //   aTag.click();
-  //   aTag.remove();
-  // };
   return (
     <div
       id="messages"
-      className="flex w-full flex-col h-[76vh] bg-white p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+      className="flex w-full flex-col h-[72vh] bg-white bg-dark pb-5 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
     >
       {isLoading && <Loading text="text-gray-500" />}
       {isError && <p>something went wrong unable to read the messages</p>}
       {receiver && sender ? (
         texts && texts?.length > 0 ? (
-          texts?.map(message => {
+          texts?.map((message) => {
             return (
               <div key={message?._id} className="chat-message mt-2">
                 <div
@@ -63,7 +52,7 @@ const Messages = ({
                         )}
                         {message?.messageType === "file" &&
                         message?.message?.content?.length > 0
-                          ? message?.message?.content?.map(el => {
+                          ? message?.message?.content?.map((el) => {
                               if (el.mimetype.split("/")[0] === "audio") {
                                 return (
                                   <div className="w-full flex gap-3 items-center justify-center flex-col text-white rounded-md ">
@@ -371,11 +360,17 @@ const Messages = ({
                       </p>
                     </div>
                   </div>
-                  <img
-                    src={message?.sender?.ProfilePicture}
-                    alt=""
-                    className="w-10 h-10 rounded-full border"
-                  />
+                  {message?.sender?.profilePicture?.length > 1 ? (
+                    <img
+                      class="w-9 h-9 rounded-full"
+                      src={message?.sender?.profilePicture}
+                      alt="photo"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 p-1 text-xl font-bold rounded-full flex items-center justify-center bg-blue-700 text-white text-center">
+                      {message?.sender?.email?.substring(0, 1)}
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -392,7 +387,7 @@ const Messages = ({
       )}
 
       {typing && (
-        <div className=" text-main absolute bottom-14 flex gap-2 items-center justify-center ml-2 mt-1">
+        <div className=" text-main absolute bottom-16 flex gap-2 items-center justify-center ml-4 mt-1">
           <div class="chat-bubble">
             <div class="typing">
               <div class="dot"></div>
@@ -402,6 +397,8 @@ const Messages = ({
           </div>
         </div>
       )}
+
+      <div ref={refer} />
     </div>
   );
 };

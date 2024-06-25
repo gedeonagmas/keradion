@@ -4,10 +4,8 @@ const jwt = require("jsonwebtoken");
 const AppError = require("../utils/AppError");
 
 const authentication = async (req, res, next) => {
-  // console.log(req.cookies, "cookies");
-  // console.log(req.headers,'headers'); 
   let token, user;
-  const header = req.cookies._e_l_s;
+  const header = req.cookies._k_d;
   if (header && header !== "null" && header !== "") {
     token = header;
   }

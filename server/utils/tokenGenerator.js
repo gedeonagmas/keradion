@@ -13,7 +13,7 @@ const tokenGenerator = (res, id) => {
   };
 
   const MAX_AGE = 30 * 24 * 60 * 60 * 1000;
-  res.cookie("_e_l_s", token, {
+  res.cookie("_k_d", token, {
     maxAge: MAX_AGE,
     httpOnly: true,
     secure: true,

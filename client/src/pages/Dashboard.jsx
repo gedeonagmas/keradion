@@ -4,19 +4,20 @@ import "react-circular-progressbar/dist/styles.css";
 import { Logout } from "@mui/icons-material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { Outlet } from "react-router-dom";
-import callCenterImage from "../assets/promotion.avif";
+import logo from "./../assets/logo.png";
 import { useReadQuery, useUserLogoutMutation } from "../features/api/apiSlice";
 import Response from "../components/Response";
 
 const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem("keradion_user"));
+  const fetchBy = user?.role === "user" ? `user=${user?._id}` : "";
 
   const {
     data: invoices,
     isFetching: invoicesIsFetching,
     isError: invoicesIsError,
   } = useReadQuery({
-    url: `/user/invoices?user[eq]=${user?.user?._id}`,
+    url: `/user/invoices?${fetchBy}`,
     tag: ["invoices"],
   });
 
@@ -128,7 +129,7 @@ const Dashboard = () => {
                         class="relative flex flex-col items-center text-sm font-medium text-center"
                       >
                         <svg
-                          class="w-6 h-6"
+                          class="w-6 h-6 "
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -136,10 +137,14 @@ const Dashboard = () => {
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z" />
+                          <path
+                            fill-rule="evenodd"
+                            d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z"
+                            clip-rule="evenodd"
+                          />
                         </svg>
 
-                        {invoices?.data?.length > 0 && (
+                        {invoices && (
                           <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs p-1 font-bold text-white bg-main border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
                             {invoices?.data?.length}
                           </div>
@@ -245,14 +250,12 @@ const Dashboard = () => {
         <div class="h-full px-3 pb-4 overflow-y-auto bg-white bg-dark dark:bg-gray-800">
           <ul class="space-y-2 font-medium">
             <a href="/" class="flex flex-col ms-2 md:me-24">
-              <p className="text-2xl font-bold text-main">KERADION</p>
-              <p className="text-2xl font-bold text-main">DESIGN</p>
-              <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"></span>
+              <img src={logo} className="w-full h-14" alt="" />
             </a>
             <li onClick={() => sidebarHandler("off")}>
               <a
                 href={`/dashboard/${user?.role}`}
-                class="flex items-center p-2 text-gray-500 hover:text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                class="flex mt-4 items-center p-2 text-gray-500 hover:text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <DashboardIcon className="" />
                 <span class="ms-3">Overview</span>
@@ -284,38 +287,6 @@ const Dashboard = () => {
               </a>
             </li>
 
-            {user?.role === "admin" && (
-              <li>
-                <a
-                  href="/dashboard/admin/users"
-                  class="flex items-center p-2 text-gray-500 hover:text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <svg
-                    class="w-6 h-6"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M16 18H8l2.5-6 2 4 1.5-2 2 4Zm-1-8.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"
-                    />
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1ZM8 18h8l-2-4-1.5 2-2-4L8 18Zm7-8.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"
-                    />
-                  </svg>
-
-                  <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-                </a>
-              </li>
-            )}
             <li>
               <a
                 href={`/dashboard/${user?.role}/profile`}

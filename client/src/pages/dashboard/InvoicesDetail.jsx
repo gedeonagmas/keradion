@@ -12,8 +12,10 @@ import { utils, writeFile } from "xlsx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Pop from "../../components/Pop";
 import { format } from "timeago.js";
+import { useNavigate } from "react-router-dom";
 
 const InvoicesDetail = () => {
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("keradion_user"));
   const id = location?.search?.split("?id=")[1];
 
@@ -51,7 +53,6 @@ const InvoicesDetail = () => {
   const deleteHandler = () => {
     id &&
       deleteData({
-        isActive: value,
         url: `/user/invoices?id=${id}`,
         tag: ["invoices"],
       });
@@ -59,7 +60,8 @@ const InvoicesDetail = () => {
 
   useEffect(() => {
     if (deleteResponse?.status === "fulfilled") {
-      setPopup(false);
+      navigate(`/dashboard/${user?.role}/invoices`);
+      window.scrollTo({ top: 0 });
     }
   }, [deleteResponse]);
   const [trigger, { data: invoices, isFetching, isError }] = useLazyReadQuery();
@@ -353,7 +355,7 @@ const InvoicesDetail = () => {
       </div>
       {popup && (
         <Pop
-          content="Are you sure you want to remove this price?"
+          content="Are you sure you want to remove this invoice?"
           cancel={setPopup}
           trigger={
             <LoadingButton
@@ -367,12 +369,13 @@ const InvoicesDetail = () => {
         />
       )}
 
-      <p className="text-lg font-bold mt-10 ml-20">PDF Format</p>
       <div
         ref={licenseCertificatedRef}
         class="max-w-2xl mx-auto p-4 bg-white border rounded shadow-sm my-2"
         id="invoice"
       >
+        {" "}
+        <p className="text-lg font-bold">PDF Format</p>
         <div class="grid grid-cols-2 items-center">
           <p className="text-2xl font-bold uppercase">
             {invoices?.data[0]?.companyName}
@@ -384,7 +387,6 @@ const InvoicesDetail = () => {
             <p class="text-gray-500 text-sm mt-1">+251 954104637</p>
           </div>
         </div>
-
         <div class="grid grid-cols-2 items-center mt-4">
           <div>
             <p class="font-bold text-gray-800">Bill to :</p>
@@ -416,7 +418,6 @@ const InvoicesDetail = () => {
             </p>
           </div>
         </div>
-
         <div class="-mx-4 flow-root sm:mx-0">
           <table class="min-w-full">
             <thead class="border-b border-gray-300 text-gray-900">
@@ -517,7 +518,6 @@ const InvoicesDetail = () => {
             </tfoot>
           </table>
         </div>
-
         <div class="border-t-2 pt-2 text-xs text-gray-500 text-center mt-2">
           Please pay the invoice before the due date. You can pay the invoice by
           logging in to your account from our client portal.

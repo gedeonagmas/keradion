@@ -2,7 +2,7 @@ const asyncCatch = require("express-async-catch");
 const AppError = require("../utils/AppError.js");
 const { Chat } = require("../models/chatModel.js");
 const { size } = require("../utils/size.js");
-const api = "http://localhost:3001/uploads/";
+const api = "http://localhost:5001/uploads/";
 
 //create
 const chatCreate = asyncCatch(async (req, res, next) => {
@@ -72,9 +72,6 @@ const chatRead = asyncCatch(async (req, res, next) => {
   })
     .populate({
       path: "sender receiver",
-      populate: {
-        path: "user",
-      },
     })
     .limit(limits ? limits : null);
 

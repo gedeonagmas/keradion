@@ -23,7 +23,7 @@ const Forget = () => {
         {" "}
         <p className="text-xl font-bold">Forget</p>
         <p className="mt-2">
-          Please insert the email that used before to register in our system.
+          Please insert the email that used before to register in Keradion.
         </p>
         <div class="mb-5 mt-4">
           <label
@@ -37,7 +37,7 @@ const Forget = () => {
             type="email"
             id="email"
             class="shadow-sm  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-            placeholder="name@flowbite.com"
+            placeholder="gedeonagmas2580@gmail.com"
             required
           />
         </div>

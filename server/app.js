@@ -106,7 +106,6 @@ mongodb()
       //user disconnected
       socket.on("disconnect", () => {
         removeUser(socket.id);
-        // console.log(users, "online disconnected");
         io.emit(
           "aaa",
           users.map((u) => u.name)
@@ -115,11 +114,8 @@ mongodb()
 
       //send message for rooms
       socket.on("aa", (messages, room) => {
-        // console.log(room1, room2, "rooms");
         socket.join(room);
         socket.to(room).emit("bb", messages);
-        // socket.join([room1, room2]);
-        // socket.to(room1).to(room2).emit("bb", messages);
       });
 
       //typing indicator on
@@ -132,13 +128,6 @@ mongodb()
       socket.on("typing f", (bool, room) => {
         socket.join(room);
         socket.to(room).emit("typing false", bool);
-      });
-
-      //voice call incoming
-      socket.on("call-request-send", (chatId, name) => {
-        console.log(chatId, name, "is calling");
-        socket.join(chatId);
-        socket.to(chatId).emit("call-request-received", name, true);
       });
 
       socket.on("sen aaaa", (val) => {
@@ -169,40 +158,6 @@ mongodb()
         io.emit("ff2", val);
       });
 
-      //group call
-      socket.on("join room", (roomID) => {
-        if (videoUsers[roomID]) {
-          const length = videoUsers[roomID].length;
-          if (length === 4) {
-            socket.emit("room full");
-            return;
-          }
-          videoUsers[roomID].push(socket.id);
-        } else {
-          videoUsers[roomID] = [socket.id];
-        }
-        socketToRoom[socket.id] = roomID;
-        const usersInThisRoom = videoUsers[roomID].filter(
-          (id) => id !== socket.id
-        );
-
-        socket.emit("all users", usersInThisRoom);
-      });
-
-      socket.on("sending signal", (payload) => {
-        io.to(payload.userToSignal).emit("user joined", {
-          signal: payload.signal,
-          callerID: payload.callerID,
-        });
-      });
-
-      socket.on("returning signal", (payload) => {
-        io.to(payload.callerID).emit("receiving returned signal", {
-          signal: payload.signal,
-          id: socket.id,
-        });
-      });
-
       socket.on("disconnect", () => {
         const roomID = socketToRoom[socket.id];
         let room = videoUsers[roomID];
@@ -211,25 +166,6 @@ mongodb()
           videoUsers[roomID] = room;
         }
         socket.broadcast.emit("user left", socket.id);
-      });
-
-      //private call started
-      socket.emit("me", socket.id);
-
-      socket.on("disconnect", () => {
-        socket.broadcast.emit("callEnded");
-      });
-
-      socket.on("callUser", (data) => {
-        io.to(data.userToCall).emit("callUser", {
-          signal: data.signalData,
-          from: data.from,
-          name: data.name,
-        });
-      });
-
-      socket.on("answerCall", (data) => {
-        io.to(data.to).emit("callAccepted", data.signal);
       });
     });
 
