@@ -200,9 +200,7 @@ const Header = () => {
                   Dashboard
                 </a>
                 <a
-                  href={
-                    user?.role ? `/dashboard/${user?.role}/invoices` : "/login"
-                  }
+                  href={`/dashboard/${user?.role}/invoices`}
                   className="cursor-pointer"
                 >
                   <div className="items-center flex flex-col justify-center">
@@ -291,7 +289,9 @@ const Header = () => {
             </li>
             <li className="me-2 ml-2" role="presentation">
               <a
-                href={`/dashboard/${user?.role}/invoices`}
+                href={
+                  user?.role ? `/dashboard/${user?.role}/invoices` : "/login"
+                }
                 className="inline-block hover:text-[rgb(252,45,45)] p-2 rounded-t-lg"
               >
                 Invoices
