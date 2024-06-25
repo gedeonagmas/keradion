@@ -162,7 +162,9 @@ const Header = () => {
             </li>
             <li className="" role="presentation">
               <a
-                href={`/dashboard/${user?.role}/invoices`}
+                href={
+                  user?.role ? `/dashboard/${user?.role}/invoices` : "/login"
+                }
                 className="inline-block hover:text-[rgb(252,45,45)]  w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-300  focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 gap-3"
               >
                 Invoices
@@ -198,7 +200,9 @@ const Header = () => {
                   Dashboard
                 </a>
                 <a
-                  href={`/dashboard/${user?.role}/invoices`}
+                  href={
+                    user?.role ? `/dashboard/${user?.role}/invoices` : "/login"
+                  }
                   className="cursor-pointer"
                 >
                   <div className="items-center flex flex-col justify-center">
