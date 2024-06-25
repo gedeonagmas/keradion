@@ -4,7 +4,7 @@ const { User } = require("../models/userModel");
 const { tokenGenerator } = require("../utils/tokenGenerator");
 const crypto = require("crypto");
 const { sendEmailHandler } = require("./emailController");
-const api = "http://localhost:5001/uploads/";
+const api = "https://keradion.onrender.com/uploads/";
 
 const signupHandler = asyncCatch(async (req, res, next) => {
   const user = await User.create({
@@ -47,7 +47,7 @@ const loginHandler = asyncCatch(async (req, res, next) => {
 });
 
 const logoutHandler = asyncCatch(async (req, res, next) => {
-  res.cookie("_k_d_t", "", { maxAge: 1 });
+  res.cookie("_k_d", "", { maxAge: 1 });
   res.status(200).json({
     message: "Log out successful",
   });
@@ -65,7 +65,8 @@ const forgetPassword = asyncCatch(async (req, res, next) => {
   await user.save({ validateBeforeSave: true });
   const passwordResetUrl = `${"http://localhost:4000/reset"}?${resetTokenUrl}`; // this url will sent via email
 
-  const subject = "Keradion Designs --> Reset your password";
+  const subject =
+    "Keradion http://localhost:5001Designs --> Reset your password";
   const response =
     "We have just sent a verification link via your email address please check. it's valid only for 30 minutes";
   const html = `<div>This is your verification link click <a style={{background:'yellow',padding:'5px', border-radius:'20px',color:white,padding:10px;}} href="${passwordResetUrl}">here</a> to reset your password</div>`;

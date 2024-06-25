@@ -73,7 +73,7 @@ const Message = () => {
   }, []);
 
   useEffect(() => {
-    setSocket(io("http://localhost:5001"));
+    setSocket(io("https://keradion.onrender.com"));
   }, []);
 
   useEffect(() => {

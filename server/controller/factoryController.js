@@ -2,7 +2,7 @@ const asyncCatch = require("express-async-catch");
 const AppError = require("../utils/AppError");
 const { selectModel } = require("../utils/selectModel");
 
-const api = "http://localhost:5001/uploads/";
+const api = "https://keradion.onrender.com/uploads/";
 
 //create
 const _create = asyncCatch(async (req, res, next) => {
