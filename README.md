@@ -21,6 +21,7 @@ Keradion Design is a comprehensive web application that offers a wide range of f
 - Secure password reset with email verification
 - Invoice creation, reading, updating, and deletion
 - Invoice export as PDF and Excel spreadsheet
+- Fully dark and light mode
 # Real-time chat with the following features:
 - Text messaging
 - Multimedia file sharing (images, videos, audio, documents, zip files, etc.)
