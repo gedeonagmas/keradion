@@ -17,8 +17,8 @@ const sendEmailHandler = ({
     port: 465,
     secure: true,
     auth: {
-      user: "gedeonagmas2580@gmail.com",
-      pass: "wirj dllf xaow tcyu",
+      user: process.env.EMAIL,
+      pass: process.env.KEY,
     },
   });
 

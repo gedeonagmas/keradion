@@ -33,7 +33,7 @@ const SignUp = ({ type }) => {
         response={signupResponse}
         setPending={setPending}
         type="signUp"
-      />{" "}
+      />
       <div class="flex flex-col items-center justify-center px-6 py-2 mx-auto h-screen lg:py-0">
         <div class="w-auto bg-white px-5 rounded-lg shadow dark:border xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div class="px-4 py-4">
