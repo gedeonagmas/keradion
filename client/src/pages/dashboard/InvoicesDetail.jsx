@@ -150,6 +150,7 @@ const InvoicesDetail = () => {
     utils.book_append_sheet(wb, ws, "Inovice Sheet");
     writeFile(wb, "invoice.xlsx");
   };
+
   return (
     <div>
       <Response response={updateResponse} setPending={setCreatePending} />
@@ -323,7 +324,7 @@ const InvoicesDetail = () => {
             Pdf
           </button>
           <button
-            onClick={() => handleXlsxGenerate([invoices?.data])}
+            onClick={() => handleXlsxGenerate([invoices?.data[0]])}
             className="px-3 flex items-center gap-1 py-2 bg-emerald-500 text-white rounded-lg"
           >
             <svg
