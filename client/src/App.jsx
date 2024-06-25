@@ -147,7 +147,7 @@ function App() {
               ></Route>
             </Route>
           )}
-          <Route path="*" element={<PageNotFound />}></Route>
+          <Route path="*" element={<HomeTemplate />}></Route>
         </Routes>
       </div>
     </Flowbite>
