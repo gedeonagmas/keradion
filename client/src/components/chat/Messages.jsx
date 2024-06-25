@@ -34,7 +34,7 @@ const Messages = ({
                     }`}
                   >
                     <div
-                      className={`flex flex-col space-y-2  max-w-xs mx-2 order-2 ${
+                      className={`flex flex-col space-y-2  max-w-xs mx-2 mt-2 order-2 ${
                         message?.sender?._id !== currentUser?._id
                           ? "items-start"
                           : "items-end"

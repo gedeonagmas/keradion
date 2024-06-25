@@ -87,7 +87,7 @@ function App() {
                 element={<SignUp type="admin" />}
               ></Route>
             )}
-            <Route path="/login" element={<Login />}></Route>
+            {!user && <Route path="/login" element={<Login />}></Route>}
             <Route path="/forget" element={<Forget />}></Route>
             <Route path="/reset" element={<Reset />}></Route>
           </Route>

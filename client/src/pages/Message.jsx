@@ -198,7 +198,7 @@ const Message = () => {
           />
         </div>
 
-        <div className="flex relative w-full md:w-[76%] bg-blue-500 overflow-hidden h-[86.6vh] flex-col border-r">
+        <div className="flex relative w-full md:w-[76%] bg-white overflow-hidden h-[87vh] flex-col border-r">
           <ChatHeader
             onlineUsers={onlineUsers}
             user={receiverUser ? receiverUser : currentUser}
