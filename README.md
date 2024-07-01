@@ -46,6 +46,9 @@ Keradion Design is a comprehensive web application that offers a wide range of f
 ## admin account 
 - email: admin@gmail.com
 - password: 123Pass.
+## user account 
+- email: user@gmail.com
+- password: 123Pass.
 ## The front-end is deployed on Vercel [Click Here](https://keradion.vercel.app), 
 ## the back-end is deployed on Render [Click Here](https://keradion.onrender.com)
 
